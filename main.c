@@ -21,92 +21,64 @@ size_t load_file ( const char *path, void *buffer, bool binary_mode );
 // Entry point
 int main ( int argc, const char* argv[] )
 {
-
-    http_request _http_request = {
-        .path = "/index.html",
-        .request_type = HTTP_REQUEST_GET,
-        .p_header_fields = 0
-    };
-    http_response _http_response = {
-        .code = HTTP_NOT_FOUND,
-        .p_header_fields = 0
-    };
-   
-    char __http_req[(1<<16)] = { 0 };
-    char __http_res[(1<<16)] = { 0 };
- 
-    {
-        dict_construct(&_http_request.p_header_fields, 10);
-        dict_construct(&_http_response.p_header_fields, 10);
-    }
-
-    // Add request fields
-    dict_add(_http_request.p_header_fields, "Host", "en.wikipedia.org");
-    dict_add(_http_request.p_header_fields, "User-Agent", "Mozilla/5.0 Chrome/48.0.2564");
     
-    // Add response fields
-    dict_add(_http_response.p_header_fields, "Connection", "Keep-Alive");
-    dict_add(_http_response.p_header_fields, "Content-Encoding", "gzip");
-    dict_add(_http_response.p_header_fields, "Content-Type", "text/html; charset=utf-8");
+    // Initialized data
+    char _http_request[1<<16] = { 0 };
+
+    // Generate an HTTP request
+    http_serialize_request(
+        &_http_request,
+        HTTP_REQUEST_GET,
+        "/index.html",
+        "%d %e %fo %fr %h %m %o %ua %up %v",         // Format string
+                                                     // TODO: Accept                         
+                                                     // TODO: Accept-Encoding                
+                                                     // TODO: Access-Control-Request-Headers 
+                                                     // TODO: Accept-Language                
+                                                     // TODO: Access-Control-Request-Method  
+                                                     // TODO: Accept-Charset                 
+                                                     // TODO: Accept-Datetime                
+                                                     // TODO: A-IM                           
+                                                     // TODO: Authorization                  
+                                                     // TODO: Cookie                         
+                                                     // TODO: Cache-Control                  
+                                                     // TODO: Connection                     
+                                                     // TODO: Content-Encoding               
+                                                     // TODO: Content-Length                 
+                                                     // TODO: Content-Type                   
+        "Wed, 21 Oct 2015 07:28:00 GMT",             // Date
+        "100-continue",                              // Expect
+        "for=192.0.2.60;proto=http;by=203.0.113.43", // Forwarded
+        "webmaster@example.org",                     // From
+        "en.wikipedia.org",                          // Host
+                                                     // TODO: If-Match           
+                                                     // TODO: If-Modified-Since  
+                                                     // TODO: If-None-Match      
+                                                     // TODO: If-Range           
+                                                     // TODO: If-Unmodified-Since
+        "10",                                        // Max-Forwards
+        "https://developer.mozilla.org",             // Origin
+                                                     // TODO: Pragma
+                                                     // TODO: Prefer
+                                                     // TODO: Proxy-Authorization
+                                                     // TODO: Range
+                                                     // TODO: Referer
+                                                     // TODO: TE
+                                                     // TODO: Trailer
+                                                     // TODO: Transfer-Encoding
+        "Mozilla/5.0 Chrome/48.0.2564",              // User-Agent
+        "websocket",                                 // Upgrade
+        "1.0 fred, 1.1 p.example.net"                // Via
+    );
+
+    // Write the generated HTTP request to standard out
+    printf(
+    "http_request returned: \n" \
+    "================================================================================\n" \
+    "%s" \
+    "================================================================================\n",
+    _http_request);
     
-    // Encode the HTTP request
-    // [ IN ]  http_request struct
-    // [ OUT ] HTTP request text
-    // int http_encode_request ( _http_request, __http_req ) 
-    {
-
-        size_t prop_cnt = 0;
-
-        char *keys[32] = { 0 };
-        char *values[32] = { 0 };
-        char *http_req = __http_req;
-
-        // http_req
-        http_req += sprintf(http_req,"%s %s HTTP/1.1\n\r",http_request_types[_http_request.request_type], _http_request.path);
-
-        prop_cnt = dict_keys(_http_request.p_header_fields, 0);
-
-        // Dump keys and values
-        dict_keys(_http_request.p_header_fields,keys);
-        dict_values(_http_request.p_header_fields,values);
-        
-        // Iterate over each header field
-        for ( size_t i = 0; i < prop_cnt; i++ )
-            http_req += sprintf(http_req,"%s: %s\n\r",keys[i], values[i]);
-    }
-    
-    // Encode the HTTP response
-    // [ IN ] http_response struct
-    // [ OUT ] HTTP response text
-    // int http_encode_request ( _http_response, __http_res ) 
-    {
-        size_t prop_cnt = 0;
-
-        char *keys[32] = { 0 };
-        char *values[32] = { 0 };
-
-        char *http_res = __http_res;
-
-        // http_res
-        http_res += sprintf(http_res,"%d %s\n\r", http_response_status_codes[_http_response.code], http_response_status_phrases[_http_response.code]);
-
-        prop_cnt = dict_keys(_http_response.p_header_fields, 0);
-
-        // Dump keys and values
-        dict_keys(_http_response.p_header_fields,keys);
-        dict_values(_http_response.p_header_fields,values);
-        
-        // Iterate over each header field
-        for ( size_t i = 0; i < prop_cnt; i++ )
-            http_res += sprintf(http_res,"%s: %s\n\r",keys[i], values[i]);
-    }
-
-    // Print the HTTP request
-    printf("============\nHTTP REQUEST\n============\n%s\n", __http_req);
-
-    // Print the HTTP response
-    printf("=============\nHTTP RESPONSE\n=============\n%s\n", __http_res);
-
     // Success
     return EXIT_SUCCESS;
 }

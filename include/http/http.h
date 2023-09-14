@@ -14,6 +14,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdarg.h>
 #include <stdbool.h>
 #include <float.h>
 #include <errno.h>
@@ -108,20 +109,26 @@ const char *http_response_status_phrases [HTTP_RESPONSE_STATUS_COUNT] =
     "Internal Server Error"
 };
 
-// Structures
-struct http_request_s
-{
-    enum http_request_type_e request_type;
-    char *path;
-    dict *p_header_fields;
-};
-
-struct http_response_s
-{
-    enum http_response_status_e code;
-    dict *p_header_fields;
-};
-
 // Type definitions
-typedef struct http_request_s http_request;
-typedef struct http_response_s http_response;
+typedef enum http_request_type_e    http_request_type;
+typedef enum http_response_status_e http_response_status;
+
+// Serializers
+/**!
+ * Generate an http request text
+ * 
+ * @param request_text return
+ * @param request_type enumeration of request methods < GET | HEAD | POST | PATCH | etc >
+ * @param path         the path of the requested resource
+ * @param format       a percent delimited string of the above format specifiers
+ * @param ...          The values specified in the format string
+ * 
+ * @return 1 on success, 0 on error        
+ */
+DLLEXPORT int http_serialize_request (
+    char              *request_text, 
+    http_request_type  request_type,
+    const char        *path,
+    const char        *format,
+    ...
+);

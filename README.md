@@ -42,11 +42,26 @@
  
  ### Type definitions
  ```c
- TODO
+ typedef enum http_request_type_e    http_request_type;
+ typedef enum http_response_status_e http_response_status;
  ```
  ### Function definitions
 
  ```c
- TODO
+ // Serializers
+ int http_serialize_request (
+     char              *request_text, 
+     http_request_type  request_type,
+     const char        *path,
+     const char        *format,
+     ...
+ );
+ 
+ // TODO: Implement
+ // int http_serialize_response (  );
+
+ // TODO: Parsers
+ // int http_parse_request ( );
+ // int http_parse_response ( );
  ```
 

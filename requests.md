@@ -1,43 +1,43 @@
- Field Name                    | Format specifier |
--------------------------------|------------------|
-Accept-Datetime                | %adt             |
-Access-Control-Request-Method  | %acrm            |                                         
-Access-Control-Request-Headers | %acrh            |                                           
-Cookie                         | %coo             |                
-Origin                         | %o               |               
-A-IM                           | %aim             |                
-Accept                         | %ac              |                
-Accept-Charset                 | %acc             |                          
-Accept-Encoding                | %ace             |                           
-Accept-Language                | %acl             |
-Authorization                  | %aut             |
-Cache-Control                  | %cc              |                    
-Connection                     | %con             |                  
-Content-Encoding               | %ce              |                        
-Content-Length                 | %cl              |                      
-Content-Type                   | %ct              |                    
-Date                           | %d               |            
-Expect                         | %e               |              
-Forwarded                      | %fo              |                 
-From                           | %fr              |
-Host                           | %h               |
-If-Match                       | %im              |                
-If-Modified-Since              | %ims             |                         
-If-None-Match                  | %inm             |                     
-If-Range                       | %ir              |                
-If-Unmodified-Since            | %ius             |                           
-Max-Forwards                   | %m               |                    
-Pragma                         | %pra             |              
-Prefer                         | %pre             |              
-Proxy-Authorization            | %pau             |                           
-Range                          | %ra              |             
-Referer                        | %re              |               
-TE                             | %te              |          
-Trailer                        | %tra             |               
-Transfer-Encoding              | %tre             |                         
-User-Agent                     | %ua              |                  
-Upgrade                        | %up              |               
-Via                            | %v               |           
+ Field Name                    | Format specifier | Implemented? |
+-------------------------------|------------------|--------------|
+Accept-Datetime                | %adt             |              |
+Access-Control-Request-Method  | %acrm            |              |
+Access-Control-Request-Headers | %acrh            |              |
+Cookie                         | %coo             |              |
+Origin                         | %o               |              |
+A-IM                           | %aim             |              |
+Accept                         | %ac              |              |
+Accept-Charset                 | %acc             |              |
+Accept-Encoding                | %ace             |              |
+Accept-Language                | %acl             |              |
+Authorization                  | %aut             |              |
+Cache-Control                  | %cc              |              |
+Connection                     | %con             |              |
+Content-Encoding               | %ce              |              |
+Content-Length                 | %cl              |              |
+Content-Type                   | %ct              | YES          |
+Date                           | %d               | YES          |
+Expect                         | %e               | YES          |
+Forwarded                      | %fo              | YES          |
+From                           | %fr              | YES          |
+Host                           | %h               |              |
+If-Match                       | %im              |              |
+If-Modified-Since              | %ims             |              |
+If-None-Match                  | %inm             |              |
+If-Range                       | %ir              |              |
+If-Unmodified-Since            | %ius             | YES          |
+Max-Forwards                   | %m               | YES          |
+Pragma                         | %pra             |              |
+Prefer                         | %pre             |              |
+Proxy-Authorization            | %pau             |              |
+Range                          | %ra              |              |
+Referer                        | %re              |              |
+TE                             | %te              |              |
+Trailer                        | %tra             |              |
+Transfer-Encoding              | %tre             |              |
+User-Agent                     | %ua              | YES          |
+Upgrade                        | %up              | YES          |
+Via                            | %v               | YES          |
 
 ```c
 /**!
