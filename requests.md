@@ -1,40 +1,40 @@
  Field Name                    | Format specifier | Implemented? |
 -------------------------------|------------------|--------------|
-Accept-Datetime                | %adt             |              |
-Access-Control-Request-Method  | %acrm            |              |
-Access-Control-Request-Headers | %acrh            |              |
-Cookie                         | %coo             |              |
-Origin                         | %o               |              |
-A-IM                           | %aim             |              |
-Accept                         | %ac              |              |
-Accept-Charset                 | %acc             |              |
-Accept-Encoding                | %ace             |              |
-Accept-Language                | %acl             |              |
-Authorization                  | %aut             |              |
-Cache-Control                  | %cc              |              |
-Connection                     | %con             |              |
-Content-Encoding               | %ce              |              |
-Content-Length                 | %cl              |              |
+Accept-Datetime                | %adt             | NO           |
+Access-Control-Request-Method  | %acrm            | NO           |
+Access-Control-Request-Headers | %acrh            | NO           |
+Cookie                         | %coo             | NO           |
+Origin                         | %o               | NO           |
+A-IM                           | %aim             | NO           |
+Accept                         | %ac              | NO           |
+Accept-Charset                 | %acc             | NO           |
+Accept-Encoding                | %ace             | NO           |
+Accept-Language                | %acl             | NO           |
+Authorization                  | %aut             | NO           |
+Cache-Control                  | %cc              | NO           |
+Connection                     | %con             | NO           |
+Content-Encoding               | %ce              | NO           |
+Content-Length                 | %cl              | NO           |
 Content-Type                   | %ct              | YES          |
 Date                           | %d               | YES          |
 Expect                         | %e               | YES          |
 Forwarded                      | %fo              | YES          |
 From                           | %fr              | YES          |
-Host                           | %h               |              |
-If-Match                       | %im              |              |
-If-Modified-Since              | %ims             |              |
-If-None-Match                  | %inm             |              |
-If-Range                       | %ir              |              |
+Host                           | %h               | NO           |
+If-Match                       | %im              | NO           |
+If-Modified-Since              | %ims             | NO           |
+If-None-Match                  | %inm             | NO           |
+If-Range                       | %ir              | NO           |
 If-Unmodified-Since            | %ius             | YES          |
 Max-Forwards                   | %m               | YES          |
-Pragma                         | %pra             |              |
-Prefer                         | %pre             |              |
-Proxy-Authorization            | %pau             |              |
-Range                          | %ra              |              |
-Referer                        | %re              |              |
-TE                             | %te              |              |
-Trailer                        | %tra             |              |
-Transfer-Encoding              | %tre             |              |
+Pragma                         | %pra             | NO           |
+Prefer                         | %pre             | NO           |
+Proxy-Authorization            | %pau             | NO           |
+Range                          | %ra              | NO           |
+Referer                        | %re              | NO           |
+TE                             | %te              | NO           |
+Trailer                        | %tra             | NO           |
+Transfer-Encoding              | %tre             | NO           |
 User-Agent                     | %ua              | YES          |
 Upgrade                        | %up              | YES          |
 Via                            | %v               | YES          |
@@ -70,11 +70,9 @@ http_request(
     http_text,
     HTTP_REQUEST_GET,
     "/index.html",
-
     "%h %ua",
-    
-    "en.wikipedia.org",            // %h
-    "Mozilla/5.0 Chrome/48.0.2564" // %ua
+    "en.wikipedia.org",
+    "Mozilla/5.0 Chrome/48.0.2564"
 );
 
 // Print the text of the HTTP request
