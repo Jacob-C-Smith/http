@@ -401,3 +401,138 @@ int http_serialize_request (
         }
     }
 }
+
+int http_serialize_response (
+    char                 *response_text, 
+    http_response_status  response_status,
+    const char           *format,
+    ...
+)
+{
+    // Argument check
+    if ( response_text == (void *) 0 ) goto no_response_text;
+    if ( format        == (void *) 0 ) goto no_format;
+    
+    // Uninitialized data
+    va_list parameters;
+
+    // Initialized data
+    size_t written_characters = 0;
+
+    // Print the start line
+    written_characters += sprintf(&response_text[written_characters], "HTTP/1.1 %d %s\n", http_response_status_codes[response_status], http_response_status_phrases[response_status]);
+    
+    // Start reading variadic parameters
+	va_start(parameters, format); 
+
+    // Iterate through the format string
+	while (*format)
+    {
+
+        // Seek a format specifier
+        if ( *format == '%' )
+        {
+
+            // Increment the format string pointer
+            format++;
+
+            // Parse the format specifier
+            switch ( *format )
+            {
+
+                /*
+                 * ...
+                 */
+                case 'a':
+                {
+                    
+                    // Increment the format string pointer
+                    format++;
+
+                    // Parse format specifiers starting with 'a'
+                    switch ( *format )
+                    {
+
+                        // 'ac'
+                        case 'c':
+                        {
+                            // Increment the format string pointer
+                            format++;
+
+                            // Parse format specifiers starting with 'ac'
+                            switch ( *format )
+                            {
+                                // Accept field
+                                case ' ':
+                                case '\0':
+                                {
+                                
+                                    // Initialized data
+                                    const char* ABC = va_arg(parameters, const char*);
+
+                                    // Print the Accept field
+                                    written_characters += sprintf(&response_text[written_characters], "ABC: %s\n", ABC);
+
+                                    // Break
+                                    break;
+                                }
+                            }
+
+                            // Break
+                            break;
+                        }
+
+                        default:
+                            break;
+                    }
+                }
+            
+                /*
+                 * ...
+                 */
+                case 'c':
+                {
+                    break;
+                }
+            }
+        }
+	
+        format++;
+    }
+
+	va_end(parameters);
+
+    // Success
+    return 1;
+
+    // Error handling
+    {
+
+        // Argument errors
+        {
+            no_response_text:
+                #ifndef NDEBUG
+                    printf("[HTTP] Null pointer provided for parameter \"response_text\" in call to function \"%s\"\n", __FUNCTION__);
+                #endif
+
+                // Error
+                return 0;
+
+            no_path:
+                #ifndef NDEBUG
+                    printf("[HTTP] Null pointer provided for parameter \"path\" in call to function \"%s\"\n", __FUNCTION__);
+                #endif
+
+                // Error
+                return 0;
+
+            no_format:
+                #ifndef NDEBUG
+                    printf("[HTTP] Null pointer provided for parameter \"format\" in call to function \"%s\"\n", __FUNCTION__);
+                #endif
+
+                // Error
+                return 0;
+        }
+    }
+}

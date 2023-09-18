@@ -24,6 +24,7 @@ int main ( int argc, const char* argv[] )
     
     // Initialized data
     char _http_request[1<<16] = { 0 };
+    char _http_response[1<<16] = { 0 };
 
     // Generate an HTTP request
     http_serialize_request(
@@ -73,11 +74,28 @@ int main ( int argc, const char* argv[] )
 
     // Write the generated HTTP request to standard out
     printf(
-    "http_request returned: \n" \
-    "================================================================================\n" \
-    "%s" \
-    "================================================================================\n",
-    _http_request);
+        "http_serialize_request returned: \n" \
+        "================================================================================\n" \
+        "%s" \
+        "================================================================================\n",
+        _http_request
+    );
+
+    // Generate an HTTP response
+    http_serialize_response(
+        &_http_response,
+        HTTP_OK,
+        ""
+    );
+
+    // Write the generated HTTP response to standard out
+    printf(
+        "http_serialize_response returned: \n" \
+        "================================================================================\n" \
+        "%s" \
+        "================================================================================\n",
+        _http_response
+    );
     
     // Success
     return EXIT_SUCCESS;

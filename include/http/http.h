@@ -114,13 +114,13 @@ typedef enum http_request_type_e    http_request_type;
 typedef enum http_response_status_e http_response_status;
 
 // Serializers
-/**!
- * Generate an http request text
+/** !
+ * Generate an HTTP request text
  * 
  * @param request_text return
  * @param request_type enumeration of request methods < GET | HEAD | POST | PATCH | etc >
  * @param path         the path of the requested resource
- * @param format       a percent delimited string of the above format specifiers
+ * @param format       a percent delimited string of format specifiers
  * @param ...          The values specified in the format string
  * 
  * @return 1 on success, 0 on error        
@@ -130,5 +130,22 @@ DLLEXPORT int http_serialize_request (
     http_request_type  request_type,
     const char        *path,
     const char        *format,
+    ...
+);
+
+/** !
+ * Generate an HTTP response text
+ * 
+ * @param response_text   return
+ * @param response_status enumeration of response codes < OK | Moved Permanently | Found | etc >
+ * @param format          a percent delimited string of format specifiers
+ * @param ...             The values specified in the format string
+ * 
+ * @return 1 on success, 0 on error
+*/
+DLLEXPORT int http_serialize_response (
+    char                 *response_text, 
+    http_response_status  response_status,
+    const char           *format,
     ...
 );
