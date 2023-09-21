@@ -299,6 +299,81 @@ int http_serialize_request (
                  */
                 case 't':
                 {
+
+                    // Increment the format string pointer
+                    format++;
+
+                    // Parse the format specifier
+                    switch ( *format )
+                    {
+                        
+                        // TE
+                        case 'e':
+                        {
+                            // Initialized data
+                            const char* te = va_arg(parameters, const char*);
+
+                            // Print the TE field
+                            written_characters += sprintf(&request_text[written_characters], "TE: %s\n", te);
+
+                            // Break
+                            break;
+                        }
+
+                        /*
+                         * Trailer
+                         * Transfer-Encoding
+                         */
+                        case 'r':
+                        {
+                            
+                            // Increment the format specifier
+                            format++;
+
+                            // Parse the format specifier
+                            switch ( *format )
+                            {
+
+                                // Trailer
+                                case 'a':
+                                {
+
+                                    // Initialized data
+                                    const char* trailer = va_arg(parameters, const char*);
+
+                                    // Print the Trailer field
+                                    written_characters += sprintf(&request_text[written_characters], "Trailer: %s\n", trailer);
+
+                                    // Break         
+                                    break;
+                                }
+
+                                // Transfer-Encoding
+                                case 'e':
+                                {
+
+                                    // Initialized data
+                                    const char* transfer_encoding = va_arg(parameters, const char*);
+
+                                    // Print the Transfer-Encoding field
+                                    written_characters += sprintf(&request_text[written_characters], "Transfer-Encoding: %s\n", transfer_encoding);
+
+                                    // Break         
+                                    break;
+                                }
+
+                                default:
+                                    break;
+                            }
+                        }
+
+                        default:
+
+                            // Break
+                            break;
+                    }
+
+                    // Break
                     break;
                 }
 

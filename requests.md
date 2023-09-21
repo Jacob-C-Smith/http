@@ -1,9 +1,9 @@
  Field Name                    | Format specifier | Implemented? |
 -------------------------------|------------------|--------------|
-Accept-Datetime                | %adt             | NO           |
+Accept-Datetime                | %ad              | NO           |
 Access-Control-Request-Method  | %acrm            | NO           |
 Access-Control-Request-Headers | %acrh            | NO           |
-Cookie                         | %coo             | NO           |
+Cookie                         | %co              | NO           |
 Origin                         | %o               | NO           |
 A-IM                           | %aim             | NO           |
 Accept                         | %ac              | NO           |
@@ -32,9 +32,9 @@ Prefer                         | %pre             | NO           |
 Proxy-Authorization            | %pau             | NO           |
 Range                          | %ra              | NO           |
 Referer                        | %re              | NO           |
-TE                             | %te              | NO           |
-Trailer                        | %tra             | NO           |
-Transfer-Encoding              | %tre             | NO           |
+TE                             | %te              | YES          |
+Trailer                        | %tra             | YES          |
+Transfer-Encoding              | %tre             | YES          |
 User-Agent                     | %ua              | YES          |
 Upgrade                        | %up              | YES          |
 Via                            | %v               | YES          |
