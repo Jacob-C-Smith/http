@@ -27,9 +27,8 @@ If-None-Match                  | %inm             | NO           |
 If-Range                       | %ir              | NO           |
 If-Unmodified-Since            | %ius             | YES          |
 Max-Forwards                   | %m               | YES          |
-Pragma                         | %pra             | NO           |
-Prefer                         | %pre             | NO           |
-Proxy-Authorization            | %pau             | NO           |
+Prefer                         | %pr              | NO           |
+Proxy-Authorization            | %pa              | NO           |
 Range                          | %ra              | NO           |
 Referer                        | %re              | NO           |
 TE                             | %te              | YES          |

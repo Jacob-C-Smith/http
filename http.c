@@ -274,12 +274,53 @@ int http_serialize_request (
                 }
 
                 /*
-                 * Pragma
                  * Prefer
                  * Proxy-Authorization
                  */
                 case 'p':
                 {
+
+                    // Increment the format string pointer
+                    format++;
+
+                    // Parse the format specifier
+                    switch ( *format )
+                    {
+                        
+                        // Proxy-Authorization
+                        case 'a':
+                        {
+                            // Initialized data
+                            const char* proxy_authorization = va_arg(parameters, const char*);
+
+                            // Print the Proxy-Authorization field
+                            written_characters += sprintf(&request_text[written_characters], "Proxy-Authorization: %s\n", proxy_authorization);
+
+                            // Break
+                            break;
+                        }
+
+                        // Prefer
+                        case 'r':
+                        {
+
+                            // Initialized data
+                            const char* prefer = va_arg(parameters, const char*);
+
+                            // Print the Prefer field
+                            written_characters += sprintf(&request_text[written_characters], "Prefer: %s\n", prefer);
+
+                            // Break         
+                            break;
+                        }
+
+                        default:
+
+                            // Break
+                            break;
+                    }
+
+                    // Break
                     break;
                 }
 
@@ -289,6 +330,48 @@ int http_serialize_request (
                  */
                 case 'r':
                 {
+
+                    // Increment the format string pointer
+                    format++;
+                    
+                    // Parse the format specifier
+                    switch ( *format )
+                    {
+
+                        // Range
+                        case 'a':
+                        {
+                            
+                            // Initialized data
+                            const char *range = va_arg(parameters, const char *);
+
+                            // Print the range field
+                            written_characters += sprintf(&request_text[written_characters], "Range: %s\n", range);
+
+                            // Break
+                            break;
+                        }
+
+                        // Referer
+                        case 'e':
+                        {
+                            
+                            // Initialized data
+                            const char *referer = va_arg(parameters, const char *);
+
+                            // Print the referer field
+                            written_characters += sprintf(&request_text[written_characters], "Referer: %s\n", referer);
+
+                            // Break
+                            break;
+                        }
+
+                        default:
+                            // Break
+                            break;
+                    }
+
+                    // Break
                     break;
                 }
 
@@ -362,9 +445,15 @@ int http_serialize_request (
                                     break;
                                 }
 
+
                                 default:
+
+                                    // Break
                                     break;
                             }
+
+                            // Break
+                            break;
                         }
 
                         default:
