@@ -149,3 +149,21 @@ DLLEXPORT int http_serialize_response (
     const char           *format,
     ...
 );
+
+/** !
+ * Generate an HTTP response text
+ * 
+ * @param response_text   return
+ * @param response_status enumeration of response codes < OK | Moved Permanently | Found | etc >
+ * @param format          a percent delimited string of format specifiers
+ * @param ...             The values specified in the format string
+ * 
+ * @return 1 on success, 0 on error
+*/
+DLLEXPORT int http_serialize_response (
+    char                 *response_text, 
+    http_response_status  response_status,
+    const char           *format,
+    ...
+);
+

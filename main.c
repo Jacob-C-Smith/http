@@ -29,7 +29,7 @@ int main ( int argc, const char* argv[] )
     // Generate an HTTP request
     http_serialize_request(
         &_http_request,
-        HTTP_REQUEST_GET,
+        HTTP_REQUEST_POST,
         "/index.html",
         "%d %e %fo %fr %h %m %o %pra %pre %pa %te %tra %tre %ua %up %v", 
                                                                   // TODO: Accept                         
@@ -96,6 +96,13 @@ int main ( int argc, const char* argv[] )
         _http_response
     );
     
+    dict *p_request_fields = 0;
+    const char *p_path = 0;
+    http_request_type request_type = 0;
+
+    // Parse the generated HTTP request
+    http_parse_request(_http_request, &p_request_fields, &p_path, &request_type);
+
     // Success
     return EXIT_SUCCESS;
 }
