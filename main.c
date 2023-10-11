@@ -101,7 +101,7 @@ int main ( int argc, const char* argv[] )
     http_request_type request_type = 0;
 
     // Parse the generated HTTP request
-    http_parse_request(_http_request, &p_request_fields, &p_path, &request_type);
+    //http_parse_request(_http_request, &p_request_fields, &p_path, &request_type);
 
     // Success
     return EXIT_SUCCESS;

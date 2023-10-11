@@ -592,11 +592,11 @@ int http_serialize_response (
     // Iterate through the format string
 	while (*format)
     {
-
+        
         // Seek a format specifier
         if ( *format == '%' )
         {
-
+            
             // Increment the format string pointer
             format++;
 
@@ -605,7 +605,18 @@ int http_serialize_response (
             {
 
                 /*
-                 * ...
+                 * Accept-CH
+                 * Access-Control-Allow-Origin
+                 * Access-Control-Allow-Credentials
+                 * Access-Control-Expose-Headers
+                 * Access-Control-Max-Age
+                 * Access-Control-Allow-Methods
+                 * Access-Control-Allow-Headers
+                 * Accept-Patch
+                 * Accept-Ranges
+                 * Age
+                 * Allow
+                 * Alt-Svc
                  */
                 case 'a':
                 {
@@ -652,16 +663,188 @@ int http_serialize_response (
                 }
             
                 /*
-                 * ...
+                 * Cache-Control
+                 * Connection
+                 * Content-Disposition
+                 * Content-Encoding
+                 * Content-Language
+                 * Content-Length
+                 * Content-Location
+                 * Content-MD5
+                 * Content-Range
+                 * Content-Type
                  */
                 case 'c':
+                {
+
+                    // Increment the format string pointer
+                    format++;
+
+                    // Parse format specifiers starting with 'c'
+                    switch ( *format )
+                    {
+
+                        // Cache-Control
+                        case 'c':
+                        {
+
+                            // Initialized data
+                            const char* cache_control = va_arg(parameters, const char*);
+
+                            // Print the Cache-Control field
+                            written_characters += sprintf(&response_text[written_characters], "Cache-Control: %s\n", cache_control);
+
+                            // Break
+                            break;
+                        }
+
+                        // Content-Length
+                        case 'l':
+                        {
+
+                            // Initialized data
+                            const char* content_length = va_arg(parameters, const char*);
+
+                            // Print the Content-Length field
+                            written_characters += sprintf(&response_text[written_characters], "Content-Length: %s\n", content_length);
+
+                            // Break
+                            break;
+                        }
+
+                        case ' ':
+                        case '\0':
+                        {
+
+                            // Initialized data
+                            const char* connection = va_arg(parameters, const char*);
+
+                            // Print the Connection field
+                            written_characters += sprintf(&response_text[written_characters], "Connection: %s\n", connection);
+
+                            // Break
+                            break;
+                        }
+
+                    }
+                }
+
+                /*
+                 * Date
+                 * Delta-Base
+                 */
+                case 'd':
+                {
+                    break;
+                }
+
+                /*
+                 * ETag
+                 * Expires
+                 */
+                case 'e':
+                {
+                    break;
+                }
+
+                /*
+                 * IM
+                 */
+                case 'i':
+                {
+                    break;
+                }
+
+                /*
+                 * Last-Modified
+                 * Link
+                 * Location
+                 */
+                case 'l':
+                {
+                    break;
+                }
+
+                /*
+                 * P3P
+                 * Pragma
+                 * Preference-Applied
+                 * Proxy-Authenticate
+                 * Public-Key-Pins
+                 */
+                case 'p':
+                {
+
+                }
+
+                /*
+                 * Retry-After
+                 */
+                case 'r':
+                {
+                    break;
+                }
+
+                /*
+                 * Server
+                 * Set-Cookie
+                 * Strict-Transport-Security
+                 */
+                case 's':
+                {
+                    break;
+                }
+
+                /*
+                 * Trailer
+                 * Transfer-Encoding
+                 * Tk 
+                 */
+                case 't':
+                {
+                    break;
+                }
+
+                /*
+                 * Upgrade
+                 */
+                case 'u':
+                {
+                    break;
+                }
+
+                /*
+                 * Vary
+                 * Via
+                 */
+                case 'v':
+                {
+                    break;
+                }
+
+                /*
+                 * Warning
+                 * WWW-Authenticate
+                 */
+                case 'w':
+                {
+                    break;
+                }
+
+                /*
+                 * X-Frame-Options 
+                */
+                case 'x':
                 {
                     break;
                 }
             }
         }
-	
-        format++;
+        
+        // Default
+        else
+            // Increment the format string pointer
+            format++;
     }
 
 	va_end(parameters);
@@ -700,4 +883,3 @@ int http_serialize_response (
         }
     }
 }
-
