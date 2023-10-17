@@ -1,5 +1,7 @@
 #include <http/http.h>
 
+
+
 int http_serialize_request (
     char              *request_text, 
     http_request_type  request_type,
@@ -882,4 +884,44 @@ int http_serialize_response (
                 return 0;
         }
     }
+}
+
+int http_parse_request (
+    char               *request_text,
+    http_request_type  *p_request_type,
+    char              **pp_path,
+    dict              **pp_request_fields
+)
+{
+
+    // Initialized data
+    char *http_request_after_type = 0,
+         *http_request_after_path = 0;
+
+    // Get the request type
+    http_request_after_type = strchr(request_text, ' '),
+    
+    // Insert a null terminator
+    *http_request_after_type = '\0';
+
+    // Increment the pointer past the null terminator
+    http_request_after_type++;
+
+    // Get the request path
+    http_request_after_path = strchr(http_request_after_type, ' ');
+
+    // Insert a null terminator
+    *http_request_after_path = '\0';
+
+    // Increment the pointer past the null terminator
+    http_request_after_path++;
+    
+    // Return the request type to the caller
+    *p_request_type = http_request_type_hash_table_mmh64[crypto_mmh64(request_text, strlen(request_text)) % HTTP_REQUEST_TYPE_MMH64_HASH_TABLE_COUNT];
+
+    // Return the requested path to the caller
+    *pp_path = http_request_after_type;
+
+    // Success
+    return 1;
 }

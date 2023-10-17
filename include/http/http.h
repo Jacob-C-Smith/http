@@ -45,22 +45,23 @@
 #endif
 
 // Definitions
-#define HTTP_REQUEST_TYPE_COUNT    9
-#define HTTP_VERSION_COUNT         3
-#define HTTP_RESPONSE_STATUS_COUNT 7
+#define HTTP_REQUEST_TYPE_COUNT                  9
+#define HTTP_VERSION_COUNT                       3
+#define HTTP_RESPONSE_STATUS_COUNT               7
+#define HTTP_REQUEST_TYPE_MMH64_HASH_TABLE_COUNT 21
 
 // Enumerations
 enum http_request_type_e
 {
-    HTTP_REQUEST_GET     = 0,
-    HTTP_REQUEST_HEAD    = 1,
-    HTTP_REQUEST_POST    = 2,
-    HTTP_REQUEST_PUT     = 3,
-    HTTP_REQUEST_DELETE  = 4,
-    HTTP_REQUEST_CONNECT = 5,
-    HTTP_REQUEST_OPTIONS = 6,
-    HTTP_REQUEST_TRACE   = 7,
-    HTTP_REQUEST_PATCH   = 8
+    HTTP_REQUEST_GET     = 1,
+    HTTP_REQUEST_HEAD    = 2,
+    HTTP_REQUEST_POST    = 3,
+    HTTP_REQUEST_PUT     = 4,
+    HTTP_REQUEST_DELETE  = 5,
+    HTTP_REQUEST_CONNECT = 6,
+    HTTP_REQUEST_OPTIONS = 7,
+    HTTP_REQUEST_TRACE   = 8,
+    HTTP_REQUEST_PATCH   = 9
 };
 
 enum http_response_status_e
@@ -109,6 +110,13 @@ const char *http_response_status_phrases [HTTP_RESPONSE_STATUS_COUNT] =
     "Internal Server Error"
 };
 
+enum http_request_type_e http_request_type_hash_table_mmh64[HTTP_REQUEST_TYPE_MMH64_HASH_TABLE_COUNT] = 
+{
+    0, 0, HTTP_REQUEST_PUT, 0, HTTP_REQUEST_OPTIONS, HTTP_REQUEST_GET, HTTP_REQUEST_DELETE, 
+    HTTP_REQUEST_PATCH, 0, 0, 0, 0, HTTP_REQUEST_CONNECT, 0,
+    HTTP_REQUEST_POST, HTTP_REQUEST_TRACE, 0, 0, 0, 0, HTTP_REQUEST_HEAD
+};
+
 // Type definitions
 typedef enum http_request_type_e    http_request_type;
 typedef enum http_response_status_e http_response_status;
@@ -151,19 +159,18 @@ DLLEXPORT int http_serialize_response (
 );
 
 /** !
- * Generate an HTTP response text
+ * Destructivly parse an HTTP request
  * 
- * @param response_text   return
- * @param response_status enumeration of response codes < OK | Moved Permanently | Found | etc >
- * @param format          a percent delimited string of format specifiers
- * @param ...             The values specified in the format string
+ * @param request_text      the HTTP request text
+ * @param p_request_type    returns the request methods < GET | HEAD | POST | PATCH | etc >
+ * @param p_path            returns the requested path
+ * @param pp_request_fields the request fields, encoded in a dictionary
  * 
  * @return 1 on success, 0 on error
 */
-DLLEXPORT int http_serialize_response (
-    char                 *response_text, 
-    http_response_status  response_status,
-    const char           *format,
-    ...
+DLLEXPORT int http_parse_request (
+    char               *request_text,
+    http_request_type  *p_request_type,
+    char              **pp_path,
+    dict              **pp_request_fields
 );
-

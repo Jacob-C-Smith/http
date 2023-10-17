@@ -23,62 +23,75 @@ int main ( int argc, const char* argv[] )
 {
     
     // Initialized data
-    char _http_request[1<<16] = { 0 };
     char _http_response[1<<16] = { 0 };
 
-    // Generate an HTTP request
-    http_serialize_request(
-        &_http_request,
-        HTTP_REQUEST_POST,
-        "/index.html",
-        "%d %e %fo %fr %h %m %o %pra %pre %pa %te %tra %tre %ua %up %v", 
-                                                                  // TODO: Accept                         
-                                                                  // TODO: Accept-Encoding                
-                                                                  // TODO: Access-Control-Request-Headers 
-                                                                  // TODO: Accept-Language                
-                                                                  // TODO: Access-Control-Request-Method  
-                                                                  // TODO: Accept-Charset                 
-                                                                  // TODO: Accept-Datetime                
-                                                                  // TODO: A-IM                           
-                                                                  // TODO: Authorization                  
-                                                                  // TODO: Cookie                         
-                                                                  // TODO: Cache-Control                  
-                                                                  // TODO: Connection                     
-                                                                  // TODO: Content-Encoding               
-                                                                  // TODO: Content-Length                 
-                                                                  // TODO: Content-Type                   
-        "Wed, 21 Oct 2015 07:28:00 GMT",                          // Date
-        "100-continue",                                           // Expect
-        "for=192.0.2.60;proto=http;by=203.0.113.43",              // Forwarded
-        "webmaster@example.org",                                  // From
-        "en.wikipedia.org",                                       // Host
-                                                                  // TODO: If-Match           
-                                                                  // TODO: If-Modified-Since  
-                                                                  // TODO: If-None-Match      
-                                                                  // TODO: If-Range           
-                                                                  // TODO: If-Unmodified-Since
-        "10",                                                     // Max-Forwards
-        "https://developer.mozilla.org",                          // Origin
-                                                                  // Prefer
-        "Basic YWxhZGRpbjpvcGVuc2VzYW1l",                         // Proxy-Authorization
-                                                                  // TODO: Range
-                                                                  // TODO: Referer
-        "gzip",                                                   // TE
-        "Expires",                                                // Trailer
-        "chunked",                                                // Transfer-Encoding
-        "Mozilla/5.0 Chrome/48.0.2564",                           // User-Agent
-        "websocket",                                              // Upgrade
-        "1.0 fred, 1.1 p.example.net"                             // Via
-    );
+    // Requests
+    {
 
-    // Write the generated HTTP request to standard out
-    printf(
-        "http_serialize_request returned: \n" \
-        "================================================================================\n" \
-        "%s" \
-        "================================================================================\n",
-        _http_request
-    );
+        // Initialized data
+        char               _http_request[1<<16] = { 0 };
+        dict              *p_request_fields     = 0;
+        char              *p_path               = 0;
+        http_request_type  request_type         = 0;
+
+        // Generate an HTTP request
+        http_serialize_request(
+            &_http_request,
+            HTTP_REQUEST_POST,
+            "/index.html",
+            "%d %e %fo %fr %h %m %o %pra %pre %pa %te %tra %tre %ua %up %v", 
+                                                                    // TODO: Accept                         
+                                                                    // TODO: Accept-Encoding                
+                                                                    // TODO: Access-Control-Request-Headers 
+                                                                    // TODO: Accept-Language                
+                                                                    // TODO: Access-Control-Request-Method  
+                                                                    // TODO: Accept-Charset                 
+                                                                    // TODO: Accept-Datetime                
+                                                                    // TODO: A-IM                           
+                                                                    // TODO: Authorization                  
+                                                                    // TODO: Cookie                         
+                                                                    // TODO: Cache-Control                  
+                                                                    // TODO: Connection                     
+                                                                    // TODO: Content-Encoding               
+                                                                    // TODO: Content-Length                 
+                                                                    // TODO: Content-Type                   
+            "Wed, 21 Oct 2015 07:28:00 GMT",                          // Date
+            "100-continue",                                           // Expect
+            "for=192.0.2.60;proto=http;by=203.0.113.43",              // Forwarded
+            "webmaster@example.org",                                  // From
+            "en.wikipedia.org",                                       // Host
+                                                                    // TODO: If-Match           
+                                                                    // TODO: If-Modified-Since  
+                                                                    // TODO: If-None-Match      
+                                                                    // TODO: If-Range           
+                                                                    // TODO: If-Unmodified-Since
+            "10",                                                     // Max-Forwards
+            "https://developer.mozilla.org",                          // Origin
+                                                                    // Prefer
+            "Basic YWxhZGRpbjpvcGVuc2VzYW1l",                         // Proxy-Authorization
+                                                                    // TODO: Range
+                                                                    // TODO: Referer
+            "gzip",                                                   // TE
+            "Expires",                                                // Trailer
+            "chunked",                                                // Transfer-Encoding
+            "Mozilla/5.0 Chrome/48.0.2564",                           // User-Agent
+            "websocket",                                              // Upgrade
+            "1.0 fred, 1.1 p.example.net"                             // Via
+        );
+
+        // Write the generated HTTP request to standard out
+        printf(
+            "http_serialize_request returned: \n" \
+            "================================================================================\n" \
+            "%s" \
+            "================================================================================\n",
+            _http_request
+        );
+
+        // Parse the generated HTTP request
+        http_parse_request(_http_request, &p_request_fields, &p_path, &request_type);
+
+    }
 
     // Generate an HTTP response
     http_serialize_response(
@@ -96,12 +109,8 @@ int main ( int argc, const char* argv[] )
         _http_response
     );
     
-    dict *p_request_fields = 0;
-    const char *p_path = 0;
-    http_request_type request_type = 0;
+    
 
-    // Parse the generated HTTP request
-    //http_parse_request(_http_request, &p_request_fields, &p_path, &request_type);
 
     // Success
     return EXIT_SUCCESS;
