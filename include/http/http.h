@@ -75,7 +75,7 @@ enum http_response_status_e
     HTTP_INTERNAL_SERVER_ERROR  = 6
 };
 
-const char *http_request_types [HTTP_REQUEST_TYPE_COUNT] =
+static const char *http_request_types [HTTP_REQUEST_TYPE_COUNT] =
 {
     "GET",
     "HEAD",
@@ -88,7 +88,7 @@ const char *http_request_types [HTTP_REQUEST_TYPE_COUNT] =
     "PATCH"
 };
 
-const short http_response_status_codes[HTTP_RESPONSE_STATUS_COUNT] = 
+static const short http_response_status_codes[HTTP_RESPONSE_STATUS_COUNT] = 
 {
     200,
     301,
@@ -99,7 +99,7 @@ const short http_response_status_codes[HTTP_RESPONSE_STATUS_COUNT] =
     500
 };
 
-const char *http_response_status_phrases [HTTP_RESPONSE_STATUS_COUNT] = 
+static const char *http_response_status_phrases [HTTP_RESPONSE_STATUS_COUNT] = 
 {
     "OK",
     "Moved Permanently",
@@ -110,7 +110,7 @@ const char *http_response_status_phrases [HTTP_RESPONSE_STATUS_COUNT] =
     "Internal Server Error"
 };
 
-enum http_request_type_e http_request_type_hash_table_mmh64[HTTP_REQUEST_TYPE_MMH64_HASH_TABLE_COUNT] = 
+static enum http_request_type_e http_request_type_hash_table_mmh64[HTTP_REQUEST_TYPE_MMH64_HASH_TABLE_COUNT] = 
 {
     0, 0, HTTP_REQUEST_PUT, 0, HTTP_REQUEST_OPTIONS, HTTP_REQUEST_GET, HTTP_REQUEST_DELETE, 
     HTTP_REQUEST_PATCH, 0, 0, 0, 0, HTTP_REQUEST_CONNECT, 0,
