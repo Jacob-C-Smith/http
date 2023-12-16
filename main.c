@@ -100,6 +100,7 @@ int main ( int argc, const char* argv[] )
     }
 
     // Generate an HTTP response
+    /*
     http_serialize_response(
         &_http_response,
         HTTP_OK,
@@ -113,7 +114,7 @@ int main ( int argc, const char* argv[] )
         "%s" \
         "================================================================================\n",
         _http_response
-    );
+    );*/
 
     // Success
     return EXIT_SUCCESS;

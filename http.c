@@ -578,7 +578,7 @@ int http_serialize_request (
 int http_serialize_response (
     char                 *response_text, 
     http_response_status  response_status,
-    const char           *response_content
+    const char           *response_content,
     const char           *format,
     ...
 )
@@ -775,7 +775,7 @@ int http_serialize_response (
                                     const char* content_length = va_arg(parameters, const char*);
 
                                     // Print the Connection field
-                                    written_characters += sprintf(&response_text[written_characters], "Content-Length: %s\n", connection);
+                                    written_characters += sprintf(&response_text[written_characters], "Content-Length: %s\n", content_length);
 
                                     // Break
                                     break;
