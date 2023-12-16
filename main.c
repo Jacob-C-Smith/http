@@ -39,13 +39,12 @@ int main ( int argc, const char* argv[] )
             &_http_request,
             HTTP_REQUEST_POST,
             "/index.html",
-            "%d %e %fo %fr %h %m %o %pra %pre %pa %te %tra %tre %ua %up %v", 
-                                                                    // TODO: Accept                         
-                                                                    // TODO: Accept-Encoding                
+            "%a %acrh %al %%d %e %fo %fr %h %m %o %pra %pre %pa %te %tra %tre %ua %up %v", 
+            "text/html, image/png"                                  // TODO: Accept                         
+            "Accept-Encoding: deflate, gzip;q=1.0, *;q=0.5"         // TODO: Accept-Encoding                
                                                                     // TODO: Access-Control-Request-Headers 
                                                                     // TODO: Accept-Language                
                                                                     // TODO: Access-Control-Request-Method  
-                                                                    // TODO: Accept-Charset                 
                                                                     // TODO: Accept-Datetime                
                                                                     // TODO: A-IM                           
                                                                     // TODO: Authorization                  
@@ -91,6 +90,13 @@ int main ( int argc, const char* argv[] )
         // Parse the generated HTTP request
         http_parse_request(_http_request, &p_request_fields, &p_path, &request_type);
 
+        // Print the result
+        printf("%s request for %s\n", http_request_types[request_type]);
+    }
+
+    // Response
+    {
+
     }
 
     // Generate an HTTP response
@@ -108,9 +114,6 @@ int main ( int argc, const char* argv[] )
         "================================================================================\n",
         _http_response
     );
-    
-    
-
 
     // Success
     return EXIT_SUCCESS;
@@ -120,9 +123,7 @@ size_t load_file ( const char *path, void *buffer, bool binary_mode )
 {
 
     // Argument checking 
-    #ifndef NDEBUG
-        if ( path == 0 ) goto no_path;
-    #endif
+    if ( path == 0 ) goto no_path;
 
     // Initialized data
     size_t  ret = 0;

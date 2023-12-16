@@ -1,19 +1,19 @@
  Field Name                      | Format specifier | Implemented? |
 ---------------------------------|------------------|--------------|
-Accept-CH                        | %acs             | NO           |
-Access-Control-Allow-Origin      | %acao            | NO           |
+Accept-CH                        | %ac              | NO           |
 Access-Control-Allow-Credentials | %acac            | NO           |
+Access-Control-Allow-Headers     | %acah            | NO           |
+Access-Control-Allow-Methods     | %acam            | NO           |
+Access-Control-Allow-Origin      | %acao            | NO           |
 Access-Control-Expose-Headers    | %aceh            | NO           |
 Access-Control-Max-Age           | %acma            | NO           |
-Access-Control-Allow-Methods     | %acam            | NO           |
-Access-Control-Allow-Headers     | %acah            | NO           |
-Accept-Patch                     | %ap              | NO           |
-Accept-Ranges                    | %ar              | NO           |
 Age                              | %ag              | NO           |
 Allow                            | %al              | NO           |
+Accept-Patch                     | %ap              | NO           |
+Accept-Ranges                    | %ar              | NO           |
 Alt-Svc                          | %as              | NO           |
-Cache-Control                    | %cc              | NO           |
 Connection                       | %c               | NO           |
+Cache-Control                    | %cc              | NO           |
 Content-Disposition              | %cd              | NO           |
 Content-Encoding                 | %ce              | NO           |
 Content-Language                 | %cla             | NO           |
@@ -22,29 +22,33 @@ Content-Location                 | %clo             | NO           |
 Content-MD5                      | %cmd             | NO           |
 Content-Range                    | %cr              | NO           |
 Content-Type                     | %ct              | NO           |
+
 Date                             | %d               | NO           |
 Delta-Base                       | %db              | NO           |
+
+Expires                          | %e               | NO           |
 ETag                             | %et              | NO           |
-Expires                          | %ex              | NO           |
+
 IM                               | %i               | NO           |
+
 Last-Modified	                 | %l               | NO           |
 Link                             | %li              | NO           |
 Location	                     | %lo              | NO           |
-P3P	                             | %ppp             | NO           |
 Pragma	                         | %p               | NO           |
 Preference-Applied	             | %pa              | NO           |
-Proxy-Authenticate	             | %pra             | NO           |
 Public-Key-Pins                  | %pkp             | NO           |
+P3P	                             | %pp              | NO           |
+Proxy-Authenticate	             | %pra             | NO           |
 Retry-After                      | %r               | NO           |
-Server                           | %se              | NO           |
 Set-Cookie                       | %sc              | NO           |
-Strict-Transport-Security        | %sts             | NO           | 
-Trailer	                         | %tr              | NO           | 
+Server                           | %se              | NO           |
+Strict-Transport-Security        | %st              | NO           | 
+Trailer	                         | %t               | NO           | 
 Transfer-Encoding                | %te              | NO           | 
 Tk	                             | %tk              | NO           | 
 Upgrade	                         | %u               | NO           | 
 Vary	                         | %va              | NO           | 
-Via	                             | %vi              | NO           | 
+Via	                             | %v               | NO           | 
 Warning	                         | %w               | NO           | 
 WWW-Authenticate	             | %wa              | NO           | 
 X-Frame-Options                  | %x               | NO           | 

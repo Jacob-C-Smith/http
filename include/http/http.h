@@ -90,24 +90,64 @@ static const char *http_request_types [HTTP_REQUEST_TYPE_COUNT] =
 
 static const short http_response_status_codes[HTTP_RESPONSE_STATUS_COUNT] = 
 {
+    100,
+    101,
     200,
+    201,
+    204,
+    205,
+    206,
     301,
     302,
     304,
+    307,
+    308,
+    400,
+    401,
     403,
     404,
-    500
+    405,
+    411,
+    413,
+    414,
+    416,
+    426,
+    429,
+    500,
+    501,
+    503,
+    505
 };
 
 static const char *http_response_status_phrases [HTTP_RESPONSE_STATUS_COUNT] = 
 {
+    "Continue",
+    "Switching Protocols"
     "OK",
+    "Created",
+    "No Content",
+    "Reset Content",
+    "Partial Content"
     "Moved Permanently",
     "Found",
     "Not Modified",
+    "Temporary Redirect",
+    "Permanent Redirect",
+    "Bad Request",
+    "Unauthorized",
     "Forbidden",
     "Not Found",
-    "Internal Server Error"
+    "Method Not Allowed",
+    "Length Required",
+    "Payload Too Large",
+    "URI Too Long",
+    "Range Not Satifiable",
+    "Upgrade Required",
+    "Too Many Requests",
+    "Internal Server Error",
+    "Not Implemented",
+    "Service Unavailable",
+    "HTTP Version Not Supported"
 };
 
 static enum http_request_type_e http_request_type_hash_table_mmh64[HTTP_REQUEST_TYPE_MMH64_HASH_TABLE_COUNT] = 
@@ -144,16 +184,18 @@ DLLEXPORT int http_serialize_request (
 /** !
  * Generate an HTTP response text
  * 
- * @param response_text   return
- * @param response_status enumeration of response codes < OK | Moved Permanently | Found | etc >
- * @param format          a percent delimited string of format specifiers
- * @param ...             The values specified in the format string
+ * @param response_text    return
+ * @param response_status  enumeration of response codes < OK | Moved Permanently | Found | etc >
+ * @param response_content the body of the HTTP response
+ * @param format           a percent delimited string of format specifiers
+ * @param ...              The values specified in the format string
  * 
  * @return 1 on success, 0 on error
 */
 DLLEXPORT int http_serialize_response (
     char                 *response_text, 
     http_response_status  response_status,
+    const char           *response_content,
     const char           *format,
     ...
 );

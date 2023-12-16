@@ -66,6 +66,7 @@ int http_serialize_request (
                         // 'ac'
                         case 'c':
                         {
+
                             // Increment the format string pointer
                             format++;
 
@@ -196,6 +197,7 @@ int http_serialize_request (
                         // Forwarded
                         case 'o':
                         {
+
                             // Initialized data
                             const char* forwarded = va_arg(parameters, const char*);
 
@@ -209,6 +211,7 @@ int http_serialize_request (
                         // From
                         case 'r':
                         {
+
                             // Initialized data
                             const char* from = va_arg(parameters, const char*);
 
@@ -292,6 +295,7 @@ int http_serialize_request (
                         // Proxy-Authorization
                         case 'a':
                         {
+
                             // Initialized data
                             const char* proxy_authorization = va_arg(parameters, const char*);
 
@@ -395,6 +399,7 @@ int http_serialize_request (
                         // TE
                         case 'e':
                         {
+
                             // Initialized data
                             const char* te = va_arg(parameters, const char*);
 
@@ -485,6 +490,7 @@ int http_serialize_request (
                         // User-Agent
                         case 'a':
                         {
+
                             // Initialized data
                             const char* user_agent = va_arg(parameters, const char*);
 
@@ -498,6 +504,7 @@ int http_serialize_request (
                         // Upgrade
                         case 'p':
                         {
+
                             // Initialized data
                             const char* upgrade = va_arg(parameters, const char*);
 
@@ -571,6 +578,7 @@ int http_serialize_request (
 int http_serialize_response (
     char                 *response_text, 
     http_response_status  response_status,
+    const char           *response_content
     const char           *format,
     ...
 )
@@ -633,6 +641,7 @@ int http_serialize_response (
                         // 'ac'
                         case 'c':
                         {
+
                             // Increment the format string pointer
                             format++;
 
@@ -686,34 +695,8 @@ int http_serialize_response (
                     switch ( *format )
                     {
 
-                        // Cache-Control
-                        case 'c':
-                        {
 
-                            // Initialized data
-                            const char* cache_control = va_arg(parameters, const char*);
-
-                            // Print the Cache-Control field
-                            written_characters += sprintf(&response_text[written_characters], "Cache-Control: %s\n", cache_control);
-
-                            // Break
-                            break;
-                        }
-
-                        // Content-Length
-                        case 'l':
-                        {
-
-                            // Initialized data
-                            const char* content_length = va_arg(parameters, const char*);
-
-                            // Print the Content-Length field
-                            written_characters += sprintf(&response_text[written_characters], "Content-Length: %s\n", content_length);
-
-                            // Break
-                            break;
-                        }
-
+                        // Connection
                         case ' ':
                         case '\0':
                         {
@@ -728,6 +711,133 @@ int http_serialize_response (
                             break;
                         }
 
+                        // Cache-Control
+                        case 'c':
+                        {
+
+                            // Initialized data
+                            const char* cache_control = va_arg(parameters, const char*);
+
+                            // Print the Cache-Control field
+                            written_characters += sprintf(&response_text[written_characters], "Cache-Control: %s\n", cache_control);
+
+                            // Break
+                            break;
+                        }
+                        
+                        // Content-Disposition
+                        case 'd':
+                        {
+
+                            // Initialized data
+                            const char* content_disposition = va_arg(parameters, const char*);
+
+                            // Print the content type field
+                            written_characters += sprintf(&response_text[written_characters], "Content-Disposition: %s\n", content_disposition);
+
+                            // Break
+                            break;
+                        }
+
+                        // Content-Encoding
+                        case 'e':
+                        {
+
+                            // Initialized data
+                            const char* content_encoding = va_arg(parameters, const char*);
+
+                            // Print the content encoding type field
+                            written_characters += sprintf(&response_text[written_characters], "Content-Encoding: %s\n", content_encoding);
+
+                            // Break
+                            break;
+                        }
+
+                        // Content-Length
+                        // Content-Language
+                        // Content-Location
+                        case 'l':
+                        {
+
+                            // Increment the format string pointer
+                            format++;
+
+                            // Parse format specifiers starting with 'c'
+                            switch ( *format )
+                            {
+                                
+                                // Content-Length
+                                case '\0':
+                                case ' ':
+                                {
+
+                                    // Initialized data
+                                    const char* content_length = va_arg(parameters, const char*);
+
+                                    // Print the Connection field
+                                    written_characters += sprintf(&response_text[written_characters], "Content-Length: %s\n", connection);
+
+                                    // Break
+                                    break;
+                                }
+
+                                // Content-Language
+                                case 'a':
+                                {
+
+                                }
+
+                                // Content-Location
+                                case 'o':
+                                {
+
+                                }
+                            }
+
+                            break;
+                        }
+                    
+                        // Content-MD5
+                        case 'm':
+                        {
+
+                            // Initialized data
+                            const char* content_md5 = va_arg(parameters, const char*);
+
+                            // Print the content MD5 field
+                            written_characters += sprintf(&response_text[written_characters], "Content-MD5: %s\n", content_md5);
+
+                            // Break
+                            break;
+                        }
+
+                        // Content-Range
+                        case 'r':
+                        {
+
+                            // Initialized data
+                            const char* content_range = va_arg(parameters, const char*);
+
+                            // Print the content range field
+                            written_characters += sprintf(&response_text[written_characters], "Content-Range: %s\n", content_range);
+
+                            // Break
+                            break;
+                        }  
+
+                        // Content-Type
+                        case 't':
+                        {
+
+                            // Initialized data
+                            const char* content_type = va_arg(parameters, const char*);
+
+                            // Print the content type field
+                            written_characters += sprintf(&response_text[written_characters], "Content-Type: %s\n", content_type);
+
+                            // Break
+                            break;
+                        }                     
                     }
                 }
 
@@ -737,7 +847,43 @@ int http_serialize_response (
                  */
                 case 'd':
                 {
-                    break;
+
+                    // Increment the format string pointer
+                    format++;
+
+                    // Parse the format specifier
+                    switch ( *format )
+                    {
+                        
+                        // Date
+                        case ' ':
+                        case '\0':
+                        {
+
+                            // Initialized data
+                            const char* date = va_arg(parameters, const char*);
+
+                            // Print the warning field
+                            written_characters += sprintf(&response_text[written_characters], "Date: %s\n", date);
+
+                            // Break
+                            break;
+                        }
+
+                        // Delta-Base
+                        case 'b':
+                        {
+
+                            // Initialized data
+                            const char* delta_base = va_arg(parameters, const char*);
+
+                            // Print the warning field
+                            written_characters += sprintf(&response_text[written_characters], "Delta-Base: %s\n", delta_base);
+
+                            // Break
+                            break;
+                        }
+                    }
                 }
 
                 /*
@@ -746,14 +892,56 @@ int http_serialize_response (
                  */
                 case 'e':
                 {
-                    break;
+
+                    // Increment the format string pointer
+                    format++;
+
+                    // Parse the format specifier
+                    switch ( *format )
+                    {
+                        
+                        // Expires
+                        case ' ':
+                        case '\0':
+                        {
+
+                            // Initialized data
+                            const char* expires = va_arg(parameters, const char*);
+
+                            // Print the expires field
+                            written_characters += sprintf(&response_text[written_characters], "Expires: %s\n", expires);
+
+                            // Break
+                            break;
+                        }
+
+                        // ETag
+                        case 't':
+                        {
+
+                            // Initialized data
+                            const char* etag = va_arg(parameters, const char*);
+
+                            // Print the etag field
+                            written_characters += sprintf(&response_text[written_characters], "ETag: %s\n", etag);
+
+                            // Break
+                            break;
+                        }
+                    }
                 }
 
-                /*
-                 * IM
-                 */
+                // IM
                 case 'i':
                 {
+
+                    // Initialized data
+                    const char* im = va_arg(parameters, const char*);
+
+                    // Print the im field
+                    written_characters += sprintf(&response_text[written_characters], "IM: %s\n", im);
+
+                    // Break
                     break;
                 }
 
@@ -779,11 +967,17 @@ int http_serialize_response (
 
                 }
 
-                /*
-                 * Retry-After
-                 */
+                // Retry-After
                 case 'r':
                 {
+
+                    // Initialized data
+                    const char* retry_after = va_arg(parameters, const char*);
+
+                    // Print the retry after field
+                    written_characters += sprintf(&response_text[written_characters], "Retry-After: %s\n", retry_after);
+
+                    // Break
                     break;
                 }
 
@@ -804,14 +998,46 @@ int http_serialize_response (
                  */
                 case 't':
                 {
-                    break;
+                    
+                    // Increment the format string pointer
+                    format++;
+
+                    // Parse the format specifier
+                    switch ( *format )
+                    {
+                        
+                        // Trailer
+                        case ' ':
+                        case '\0':
+                        {
+
+                        }
+
+                        // Transfer-Encoding
+                        case 'e':
+                        {
+
+                        }
+
+                        // Tk
+                        case 'k':
+                        {
+                            
+                        }
+                    }
                 }
 
-                /*
-                 * Upgrade
-                 */
+                // Upgrade
                 case 'u':
                 {
+
+                    // Initialized data
+                    const char* upgrade = va_arg(parameters, const char*);
+
+                    // Print the upgrade field
+                    written_characters += sprintf(&response_text[written_characters], "Upgrade: %s\n", upgrade);
+
+                    // Break
                     break;
                 }
 
@@ -821,7 +1047,43 @@ int http_serialize_response (
                  */
                 case 'v':
                 {
-                    break;
+                    
+                    // Increment the format string pointer
+                    format++;
+
+                    // Parse the format specifier
+                    switch ( *format )
+                    {
+                        
+                        // Via
+                        case ' ':
+                        case '\0':
+                        {
+
+                            // Initialized data
+                            const char* via = va_arg(parameters, const char*);
+
+                            // Print the via field
+                            written_characters += sprintf(&response_text[written_characters], "Via: %s\n", via);
+
+                            // Break
+                            break;
+                        }
+
+                        // Vary
+                        case 'a':
+                        {
+
+                            // Initialized data
+                            const char* vary = va_arg(parameters, const char*);
+
+                            // Print the vary field
+                            written_characters += sprintf(&response_text[written_characters], "Vary: %s\n", vary);
+
+                            // Break
+                            break;
+                        }
+                    }
                 }
 
                 /*
@@ -830,14 +1092,56 @@ int http_serialize_response (
                  */
                 case 'w':
                 {
-                    break;
+                    
+                    // Increment the format string pointer
+                    format++;
+
+                    // Parse the format specifier
+                    switch ( *format )
+                    {
+                        
+                        // Warning
+                        case ' ':
+                        case '\0':
+                        {
+
+                            // Initialized data
+                            const char* warning = va_arg(parameters, const char*);
+
+                            // Print the warning field
+                            written_characters += sprintf(&response_text[written_characters], "Warning: %s\n", warning);
+
+                            // Break
+                            break;
+                        }
+
+                        // WWW-Authenticate
+                        case 'a':
+                        {
+
+                            // Initialized data
+                            const char* www_authenticate = va_arg(parameters, const char*);
+
+                            // Print the www authenticate field
+                            written_characters += sprintf(&response_text[written_characters], "WWW-Authenticate: %s\n", www_authenticate);
+
+                            // Break
+                            break;
+                        }
+                    }
                 }
 
-                /*
-                 * X-Frame-Options 
-                */
+                // X-Frame-Options 
                 case 'x':
                 {
+
+                    // Initialized data
+                    const char* x_frame_options = va_arg(parameters, const char*);
+
+                    // Print the x frame options field
+                    written_characters += sprintf(&response_text[written_characters], "X-Frame-Options: %s\n", x_frame_options);
+
+                    // Break
                     break;
                 }
             }
@@ -845,10 +1149,12 @@ int http_serialize_response (
         
         // Default
         else
+
             // Increment the format string pointer
             format++;
     }
 
+    // Stop looking for variadic parameters
 	va_end(parameters);
 
     // Success
@@ -924,4 +1230,13 @@ int http_parse_request (
 
     // Success
     return 1;
+}
+
+int http_parse_response ( 
+    char *response_text,
+    http_response_status *p_response_status,
+    dict **pp_response_fields
+)
+{
+    
 }
