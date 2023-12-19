@@ -91,7 +91,7 @@ int main ( int argc, const char* argv[] )
         http_parse_request(_http_request, &p_request_fields, &p_path, &request_type);
 
         // Print the result
-        printf("%s request for %s\n", http_request_types[request_type]);
+        //printf("%s request for %s\n", http_request_types[request_type]);
     }
 
     // Response
