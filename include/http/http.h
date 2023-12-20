@@ -1,9 +1,9 @@
 /** !
- * @file HTTP/HTTP.h 
+ * @file http/http.h 
  * 
  * @author Jacob Smith
  * 
- * Include header for HTTP library
+ * Include header for http library
  */
 
 // Include guard
@@ -47,7 +47,7 @@
 // Definitions
 #define HTTP_REQUEST_TYPE_COUNT                  9
 #define HTTP_VERSION_COUNT                       3
-#define HTTP_RESPONSE_STATUS_COUNT               7
+#define HTTP_RESPONSE_STATUS_COUNT               27
 #define HTTP_REQUEST_TYPE_MMH64_HASH_TABLE_COUNT 21
 
 // Enumerations
@@ -66,15 +66,32 @@ enum http_request_type_e
 
 enum http_response_status_e
 {
-    HTTP_OK                     = 0,
-    HTTP_MOVED_PERMANENTLY      = 1,
-    HTTP_FOUND                  = 2,
-    HTTP_NOT_MODIFIED           = 3,
-    HTTP_FORBIDDEN              = 4,
-    HTTP_NOT_FOUND              = 5,
-    HTTP_INTERNAL_SERVER_ERROR  = 6
+    HTTP_CONTINUE               = 0,
+    HTTP_SWITCHING_PROTOCOLS    = 1,
+    HTTP_OK                     = 2,
+    HTTP_CREATED                = 3,
+    HTTP_NO_CONTENT             = 4,
+    HTTP_RESET_CONTENT          = 5,
+    HTTP_PARTIAL_CONTENT        = 6,    
+    HTTP_MOVED_PERMANENTLY      = 7,
+    HTTP_FOUND                  = 8,
+    HTTP_NOT_MODIFIED           = 9,
+    HTTP_TEMPORARY_REDIRECT     = 10,
+    HTTP_PERMANENT_REDIRECT     = 11,
+    HTTP_BAD_REQUEST            = 12,
+    HTTP_UNAUTHORIZED           = 13,
+    HTTP_FORBIDDEN              = 14,
+    HTTP_NOT_FOUND              = 15,
+    HTTP_NOT_ACCEPTABLE         = 16,
+    HTTP_LENGTH_REQUIRED        = 17,
+    HTTP_PAYLOAD_TOO_LARGE      = 18,
+    HTTP_URI_TOO_LONG           = 19,
+    HTTP_RANGE_NOT_SATISFIABLE  = 20,
+    HTTP_UPGRADE_REQUIRED       = 21,
+    HTTP_INTERNAL_SERVER_ERROR  = 22
 };
 
+// Lookup
 static const char *http_request_types [HTTP_REQUEST_TYPE_COUNT] =
 {
     "GET",
@@ -157,32 +174,104 @@ static enum http_request_type_e http_request_type_hash_table_mmh64[HTTP_REQUEST_
     HTTP_REQUEST_POST, HTTP_REQUEST_TRACE, 0, 0, 0, 0, HTTP_REQUEST_HEAD
 };
 
-// Type definitions
-typedef enum http_request_type_e    http_request_type;
-typedef enum http_response_status_e http_response_status;
+// Forward declarations
+struct http_request_s;
+struct http_response_s;
 
-// Serializers
+// Type definitions
+typedef struct   http_message_s http_message;
+typedef enum     http_request_type_e    http_request_type;
+typedef enum     http_response_status_e http_response_status;
+typedef int    (*http_request_response_fn)(http_message _http_request, http_message _http_response);
+
+// Structure definitions
+struct http_message_s
+{
+    int keep_alive;
+    char *body;
+    bool status;
+
+    struct
+    {
+        struct 
+        {
+            char *accept;
+            char *language;
+            char *encoding;
+        } accept_headers;
+        char *host;
+        char *user_agent;
+        char *referrer;
+        char *connection;
+        http_request_type type;
+        char *path;
+    } request;
+
+    struct 
+    {
+        struct
+        {
+            char *encoding;
+            char *type;
+            char *date;
+        } content;
+        struct 
+        {
+            char *set;
+        } cookie;
+        http_response_status status_code;
+    } response;
+
+    struct 
+    {
+        char *type;
+        char *encoding;
+        char *language;
+        char *location;
+        char *length;
+        char *range;
+    } representation;
+
+    struct
+    {
+        char *trailer;
+        char *transfer_encoding;
+    } payload;
+};
+
+// HTTP Requests
 /** !
  * Generate an HTTP request text
- * 
- * @param request_text return
- * @param request_type enumeration of request methods < GET | HEAD | POST | PATCH | etc >
- * @param path         the path of the requested resource
- * @param format       a percent delimited string of format specifiers
- * @param ...          The values specified in the format string
+ *
+ * @param pp_request    
+ * @param p_request_text 
+ * @param max_request_len 
  * 
  * @return 1 on success, 0 on error        
  */
 DLLEXPORT int http_serialize_request (
-    char              *request_text, 
-    http_request_type  request_type,
-    const char        *path,
-    const char        *format,
-    ...
+    char *p_request_text,
+    http_message *p_http_request
 );
 
 /** !
- * Generate an HTTP response text
+ * Destructively parse an HTTP request header. This function parses some request text, and 
+ * calls a function supplied by the user. You can access the p_request struct to process the 
+ * the http request. The http request memory is free()'d at the end of the call, so be careful. 
+ * 
+ * @param p_request_text     pointer to http request text
+ * @param pfn_request_parser user function
+ * 
+ * @return 1 on success, 0 on error
+ */
+DLLEXPORT int http_parse_request (
+    const char *p_request_text,
+    http_message *p_http_request
+);
+
+// HTTP Responses
+/** !
+ * Destructively serialize an http request
  * 
  * @param response_text    return
  * @param response_status  enumeration of response codes < OK | Moved Permanently | Found | etc >
@@ -192,27 +281,28 @@ DLLEXPORT int http_serialize_request (
  * 
  * @return 1 on success, 0 on error
 */
-DLLEXPORT int http_serialize_response (
-    char                 *response_text, 
-    http_response_status  response_status,
-    const char           *response_content,
-    const char           *format,
-    ...
+int http_serialize_response (
+    const char *p_response_text,
+    http_message *p_http_response
 );
 
 /** !
- * Destructivly parse an HTTP request
+ * Destructively parse an HTTP response. This function parses some request text, and 
+ * calls a function supplied by the user. You can access the p_request struct to process the 
+ * the http request. The http request memory is free()'d at the end of the call, so be careful. 
  * 
- * @param request_text      the HTTP request text
- * @param p_request_type    returns the request methods < GET | HEAD | POST | PATCH | etc >
- * @param p_path            returns the requested path
- * @param pp_request_fields the request fields, encoded in a dictionary
+ * @param p_request_text     pointer to http request text
+ * @param pfn_request_parser user function
  * 
  * @return 1 on success, 0 on error
 */
-DLLEXPORT int http_parse_request (
-    char               *request_text,
-    http_request_type  *p_request_type,
-    char              **pp_path,
-    dict              **pp_request_fields
+DLLEXPORT int http_parse_response (
+    const char  *p_response_text,
+    int        (*pfn_response_parser)(http_message *p_http_response)
+);
+
+// Request -> Response
+DLLEXPORT int http_request_response (
+    const char *p_response_text,
+    http_request_response_fn *pfn_http_request_response_function
 );
