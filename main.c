@@ -24,7 +24,7 @@ int main ( int argc, const char* argv[] )
     
     // Initialized data
     char _http_response[1<<16] = { 0 };
-
+    /*
     // Requests
     {
 
@@ -98,6 +98,7 @@ int main ( int argc, const char* argv[] )
     {
 
     }
+    */
 
     // Generate an HTTP response
     /*
