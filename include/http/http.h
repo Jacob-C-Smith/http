@@ -1,9 +1,9 @@
 /** !
+ * Include header for http library
+ * 
  * @file http/http.h 
  * 
  * @author Jacob Smith
- * 
- * Include header for http library
  */
 
 // Include guard
@@ -20,8 +20,14 @@
 #include <errno.h>
 #include <ctype.h>
 
-// sync submodule
+// log module
+#include <log/log.h>
+
+// sync module
 #include <sync/sync.h>
+
+// hash cache module
+#include <hash_cache/hash_cache.h>
 
 // dict submodule
 #include <dict/dict.h>
@@ -44,55 +50,101 @@
     #define HTTP_REALLOC(p, sz) realloc(p,sz)
 #endif
 
-// Definitions
-#define HTTP_REQUEST_TYPE_COUNT                  9
-#define HTTP_VERSION_COUNT                       3
-#define HTTP_RESPONSE_STATUS_COUNT               27
-#define HTTP_REQUEST_TYPE_MMH64_HASH_TABLE_COUNT 21
-
 // Enumerations
+enum http_headers_e
+{
+    HTTP_HEADER_INVALID           = -1,
+    HTTP_HEADER_HEADER_DATE       =  0,
+    HTTP_HEADER_HEADER_SET_COOKIE =  1,
+    HTTP_HEADER_CONTENT_TYPE      =  2,
+    HTTP_HEADER_CONTENT_ENCODING  =  3,
+    HTTP_HEADER_CONTENT_LENGUAGE  =  4,
+    HTTP_HEADER_CONTENT_LOCATION  =  5,
+    HTTP_HEADER_CONTENT_LENGTH    =  6,
+    HTTP_HEADER_CONTENT_RANGE     =  7,
+    HTTP_HEADER_TRAILER           =  8,
+    HTTP_HEADER_TRANSFER_ENCODING =  9,
+    HTTP_HEADER_ACCEPT            =  10,
+    HTTP_HEADER_ACCEPT_LANGUAGE   =  11,
+    HTTP_HEADER_ACCEPT_ENCODING   =  12,
+    HTTP_HEADER_HOST              =  13,
+    HTTP_HEADER_USER_AGENT        =  14,
+    HTTP_HEADER_REFERER           =  15,
+    HTTP_HEADER_CONNECTION        =  16,
+    HTTP_HEADER_QUANTITY          =  17
+};
+
 enum http_request_type_e
 {
-    HTTP_REQUEST_GET     = 1,
-    HTTP_REQUEST_HEAD    = 2,
-    HTTP_REQUEST_POST    = 3,
-    HTTP_REQUEST_PUT     = 4,
-    HTTP_REQUEST_DELETE  = 5,
-    HTTP_REQUEST_CONNECT = 6,
-    HTTP_REQUEST_OPTIONS = 7,
-    HTTP_REQUEST_TRACE   = 8,
-    HTTP_REQUEST_PATCH   = 9
+    HTTP_REQUEST_INVALID  = -1,
+    HTTP_REQUEST_GET      =  0,
+    HTTP_REQUEST_HEAD     =  1,
+    HTTP_REQUEST_POST     =  2,
+    HTTP_REQUEST_PUT      =  3,
+    HTTP_REQUEST_DELETE   =  4,
+    HTTP_REQUEST_CONNECT  =  5,
+    HTTP_REQUEST_OPTIONS  =  6,
+    HTTP_REQUEST_TRACE    =  7,
+    HTTP_REQUEST_PATCH    =  8,
+    HTTP_REQUEST_QUANTITY =  9
 };
 
 enum http_response_status_e
 {
-    HTTP_CONTINUE               = 0,
-    HTTP_SWITCHING_PROTOCOLS    = 1,
-    HTTP_OK                     = 2,
-    HTTP_CREATED                = 3,
-    HTTP_NO_CONTENT             = 4,
-    HTTP_RESET_CONTENT          = 5,
-    HTTP_PARTIAL_CONTENT        = 6,    
-    HTTP_MOVED_PERMANENTLY      = 7,
-    HTTP_FOUND                  = 8,
-    HTTP_NOT_MODIFIED           = 9,
-    HTTP_TEMPORARY_REDIRECT     = 10,
-    HTTP_PERMANENT_REDIRECT     = 11,
-    HTTP_BAD_REQUEST            = 12,
-    HTTP_UNAUTHORIZED           = 13,
-    HTTP_FORBIDDEN              = 14,
-    HTTP_NOT_FOUND              = 15,
-    HTTP_NOT_ACCEPTABLE         = 16,
-    HTTP_LENGTH_REQUIRED        = 17,
-    HTTP_PAYLOAD_TOO_LARGE      = 18,
-    HTTP_URI_TOO_LONG           = 19,
-    HTTP_RANGE_NOT_SATISFIABLE  = 20,
-    HTTP_UPGRADE_REQUIRED       = 21,
-    HTTP_INTERNAL_SERVER_ERROR  = 22
+    HTTP_RESPONSE_INVALID                    = -1,
+    HTTP_RESPONSE_CONTINUE                   =  0,
+    HTTP_RESPONSE_SWITCHING_PROTOCOLS        =  1,
+    HTTP_RESPONSE_OK                         =  2,
+    HTTP_RESPONSE_CREATED                    =  3,
+    HTTP_RESPONSE_NO_CONTENT                 =  4,
+    HTTP_RESPONSE_RESET_CONTENT              =  5,
+    HTTP_RESPONSE_PARTIAL_CONTENT            =  6,
+    HTTP_RESPONSE_MOVED_PERMANENTLY          =  7,
+    HTTP_RESPONSE_FOUND                      =  8,
+    HTTP_RESPONSE_NOT_MODIFIED               =  9,
+    HTTP_RESPONSE_TEMPORARY_REDIRECT         =  10,
+    HTTP_RESPONSE_PERMANENT_REDIRECT         =  11,
+    HTTP_RESPONSE_BAD_REQUEST                =  12,
+    HTTP_RESPONSE_UNAUTHORIZED               =  13,
+    HTTP_RESPONSE_FORBIDDEN                  =  14,
+    HTTP_RESPONSE_NOT_FOUND                  =  15,
+    HTTP_RESPONSE_METHOD_NOT_ALLOWED         =  15,
+    HTTP_RESPONSE_LENGTH_REQUIRED            =  17,
+    HTTP_RESPONSE_PAYLOAD_TOO_LARGE          =  18,
+    HTTP_RESPONSE_URI_TOO_LONG               =  19,
+    HTTP_RESPONSE_RANGE_NOT_SATISFIABLE      =  20,
+    HTTP_RESPONSE_UPGRADE_REQUIRED           =  21,
+    HTTP_RESPONSE_NOT_TOO_MANY_REQUESTS      =  22,
+    HTTP_RESPONSE_INTERNAL_SERVER_ERROR      =  23,
+    HTTP_RESPONSE_NOT_IMPLEMENTED            =  24,
+    HTTP_RESPONSE_SERVICE_UNAVAILABLE        =  25,
+    HTTP_RESPONSE_HTTP_VERSION_NOT_SUPPORTED =  26,
+    HTTP_RESPONSE_STATUS_QUANTITY            =  27
 };
 
-// Lookup
-static const char *http_request_types [HTTP_REQUEST_TYPE_COUNT] =
+// Data
+static const char *http_headers [HTTP_HEADER_QUANTITY] = 
+{
+    "Date",
+    "Set-Cookie",
+    "Content-Type",
+    "Content-Encoding",
+    "Content-Language",
+    "Content-Location",
+    "Content-Length",
+    "Content-Range",
+    "Trailer",
+    "Transfer-Encoding",
+    "Accept",
+    "Accept-Language",
+    "Accept-Encoding",
+    "Host",
+    "User-Agent",
+    "Referer",
+    "Connection"
+};
+
+static const char *http_request_types [HTTP_REQUEST_QUANTITY] =
 {
     "GET",
     "HEAD",
@@ -105,7 +157,39 @@ static const char *http_request_types [HTTP_REQUEST_TYPE_COUNT] =
     "PATCH"
 };
 
-static const short http_response_status_codes[HTTP_RESPONSE_STATUS_COUNT] = 
+static const char *http_response_status_phrases [HTTP_RESPONSE_STATUS_QUANTITY] = 
+{
+    "Continue",
+    "Switching Protocols",
+    "OK",
+    "Created",
+    "No Content",
+    "Reset Content",
+    "Partial Content",
+    "Moved Permanently",
+    "Found",
+    "Not Modified",
+    "Temporary Redirect",
+    "Permanent Redirect",
+    "Bad Request",
+    "Unauthorized",
+    "Forbidden",
+    "Not Found",
+    "Method Not Allowed",
+    "Length Required",
+    "Payload Too Large",
+    "URI Too Long",
+    "Range Not Satifiable",
+    "Upgrade Required",
+    "Too Many Requests",
+    "Internal Server Error",
+    "Not Implemented",
+    "Service Unavailable",
+    "HTTP Version Not Supported"
+};
+
+
+static const short http_response_status_codes[HTTP_RESPONSE_STATUS_QUANTITY] = 
 {
     100,
     101,
@@ -136,47 +220,8 @@ static const short http_response_status_codes[HTTP_RESPONSE_STATUS_COUNT] =
     505
 };
 
-static const char *http_response_status_phrases [HTTP_RESPONSE_STATUS_COUNT] = 
-{
-    "Continue",
-    "Switching Protocols"
-    "OK",
-    "Created",
-    "No Content",
-    "Reset Content",
-    "Partial Content"
-    "Moved Permanently",
-    "Found",
-    "Not Modified",
-    "Temporary Redirect",
-    "Permanent Redirect",
-    "Bad Request",
-    "Unauthorized",
-    "Forbidden",
-    "Not Found",
-    "Method Not Allowed",
-    "Length Required",
-    "Payload Too Large",
-    "URI Too Long",
-    "Range Not Satifiable",
-    "Upgrade Required",
-    "Too Many Requests",
-    "Internal Server Error",
-    "Not Implemented",
-    "Service Unavailable",
-    "HTTP Version Not Supported"
-};
-
-static enum http_request_type_e http_request_type_hash_table_mmh64[HTTP_REQUEST_TYPE_MMH64_HASH_TABLE_COUNT] = 
-{
-    0, 0, HTTP_REQUEST_PUT, 0, HTTP_REQUEST_OPTIONS, HTTP_REQUEST_GET, HTTP_REQUEST_DELETE, 
-    HTTP_REQUEST_PATCH, 0, 0, 0, 0, HTTP_REQUEST_CONNECT, 0,
-    HTTP_REQUEST_POST, HTTP_REQUEST_TRACE, 0, 0, 0, 0, HTTP_REQUEST_HEAD
-};
-
 // Forward declarations
-struct http_request_s;
-struct http_response_s;
+struct http_message_s;
 
 // Type definitions
 typedef struct   http_message_s http_message;
@@ -239,70 +284,22 @@ struct http_message_s
     } payload;
 };
 
-// HTTP Requests
+// Initializer
 /** !
- * Generate an HTTP request text
- *
- * @param pp_request    
- * @param p_request_text 
- * @param max_request_len 
+ * This gets called at runtime before main. 
  * 
- * @return 1 on success, 0 on error        
+ * @param void
+ * 
+ * @return void
  */
-DLLEXPORT int http_serialize_request (
-    char *p_request_text,
-    http_message *p_http_request
-);
+DLLEXPORT void http_init ( void ) __attribute__((constructor));
 
+// Cleanup
 /** !
- * Destructively parse an HTTP request header. This function parses some request text, and 
- * calls a function supplied by the user. You can access the p_request struct to process the 
- * the http request. The http request memory is free()'d at the end of the call, so be careful. 
+ * This gets called at runtime after main
  * 
- * @param p_request_text     pointer to http request text
- * @param pfn_request_parser user function
+ * @param void
  * 
- * @return 1 on success, 0 on error
+ * @return void
  */
-DLLEXPORT int http_parse_request (
-    const char *p_request_text,
-    http_message *p_http_request
-);
-
-// HTTP Responses
-/** !
- * Destructively serialize an http request
- * 
- * @param response_text    return
- * @param response_status  enumeration of response codes < OK | Moved Permanently | Found | etc >
- * @param response_content the body of the HTTP response
- * @param format           a percent delimited string of format specifiers
- * @param ...              The values specified in the format string
- * 
- * @return 1 on success, 0 on error
-*/
-int http_serialize_response (
-    const char *p_response_text,
-    http_message *p_http_response
-);
-
-/** !
- * Destructively parse an HTTP response. This function parses some request text, and 
- * calls a function supplied by the user. You can access the p_request struct to process the 
- * the http request. The http request memory is free()'d at the end of the call, so be careful. 
- * 
- * @param p_request_text     pointer to http request text
- * @param pfn_request_parser user function
- * 
- * @return 1 on success, 0 on error
-*/
-DLLEXPORT int http_parse_response (
-    const char  *p_response_text,
-    int        (*pfn_response_parser)(http_message *p_http_response)
-);
-
-// Request -> Response
-DLLEXPORT int http_request_response (
-    const char *p_response_text,
-    http_request_response_fn *pfn_http_request_response_function
-);
+DLLEXPORT void http_exit ( void ) __attribute__((destructor));

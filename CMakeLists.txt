@@ -61,12 +61,12 @@ endif()
 
 # Add source to this project's executable.
 add_executable (http_example "main.c")
-add_dependencies(http_example http)
-target_include_directories(http_example PUBLIC ${HTTP_INCLUDE_DIR} ${DICT_INCLUDE_DIR} ${CRYPTO_INCLUDE_DIR} ${SYNC_INCLUDE_DIR})
-target_link_libraries(http_example http)
+add_dependencies(http_example http hash_cache)
+target_include_directories(http_example PUBLIC ${HTTP_INCLUDE_DIR} ${DICT_INCLUDE_DIR} ${HASH_CACHE_INCLUDE_DIR} ${SYNC_INCLUDE_DIR})
+target_link_libraries(http_example http hash_cache)
 
 # Add source to this project's library
 add_library (http SHARED "request.c" "response.c" "http.c")
-add_dependencies(http dict crypto sync)
-target_include_directories(http PUBLIC ${HTTP_INCLUDE_DIR} ${DICT_INCLUDE_DIR} ${CRYPTO_INCLUDE_DIR} ${SYNC_INCLUDE_DIR})
-target_link_libraries(http dict crypto sync)
+add_dependencies(http dict hash_cache sync)
+target_include_directories(http PUBLIC ${HTTP_INCLUDE_DIR} ${DICT_INCLUDE_DIR} ${HASH_CACHE_INCLUDE_DIR} ${SYNC_INCLUDE_DIR})
+target_link_libraries(http dict hash_cache sync)

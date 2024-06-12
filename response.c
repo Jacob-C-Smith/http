@@ -36,7 +36,7 @@ int http_serialize_response ( const char *p_response_text, http_message *p_http_
         {
             no_response_text:
                 #ifndef NDEBUG
-                    printf("[HTTP] Null pointer provided for parameter \"response_text\" in call to function \"%s\"\n", __FUNCTION__);
+                    log_error("[http] Null pointer provided for parameter \"response_text\" in call to function \"%s\"\n", __FUNCTION__);
                 #endif
 
                 // Error
@@ -44,7 +44,7 @@ int http_serialize_response ( const char *p_response_text, http_message *p_http_
 
             no_response_parser:
                 #ifndef NDEBUG
-                    printf("[HTTP] Null pointer provided for parameter \"pfn_response_parser\" in call to function \"%s\"\n", __FUNCTION__);
+                    log_error("[http] Null pointer provided for parameter \"pfn_response_parser\" in call to function \"%s\"\n", __FUNCTION__);
                 #endif
 
                 // Error

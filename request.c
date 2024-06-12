@@ -45,7 +45,7 @@ int http_serialize_request (
         {
             no_request_text:
                 #ifndef NDEBUG
-                    printf("[HTTP] Null pointer provided for parameter \"request_text\" in call to function \"%s\"\n", __FUNCTION__);
+                    log_error("[http] Null pointer provided for parameter \"request_text\" in call to function \"%s\"\n", __FUNCTION__);
                 #endif
 
                 // Error
@@ -53,7 +53,7 @@ int http_serialize_request (
 
             no_request_parser:
                 #ifndef NDEBUG
-                    printf("[HTTP] Null pointer provided for parameter \"pfn_request_parser\" in call to function \"%s\"\n", __FUNCTION__);
+                    log_error("[http] Null pointer provided for parameter \"pfn_request_parser\" in call to function \"%s\"\n", __FUNCTION__);
                 #endif
 
                 // Error

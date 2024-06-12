@@ -1,12 +1,22 @@
+/** !
+ * HTTP example program
+ * 
+ * @file main.c
+ * 
+ * @author Jacob Smith
+ */
+
+// Standard library
 #include <stddef.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdbool.h>
 
+// http module
 #include <http/http.h>
 
-// Helper functions
+// Function declarations
 /**!
  * Return the size of a file IF buffer == 0 ELSE read a file into buffer
  * 
@@ -18,12 +28,39 @@
  */
 size_t load_file ( const char *path, void *buffer, bool binary_mode );
 
+#define MAX_M 1024
+
 // Entry point
 int main ( int argc, const char* argv[] )
 {
-    
+    size_t max_m = atoi(argv[1]);
+
+    bool _seen[MAX_M] = { 0 };
+    //fn_hash64 *pfn_hash = hash_mmh64;
+    fn_hash64 *pfn_hash = hash_fnv64;
+    //fn_hash64 *pfn_hash = hash_crc64;
+    //fn_hash64 *pfn_hash = hash_xxh64;
+
+    if ( pfn_hash == hash_mmh64 ) printf("MMH\n");
+    else if ( pfn_hash == hash_fnv64 ) printf("FNV\n");
+    else if ( pfn_hash == hash_crc64 ) printf("CRC\n");
+    else printf("XXH\n");
+
+    for (size_t i = 0; i < 27; i++)
+    {
+
+        size_t m = pfn_hash(http_response_status_phrases[i], strlen(http_response_status_phrases[i])) % max_m;
+
+        if ( _seen[m] ) exit(1);
+
+        _seen[m] = true;
+
+        printf("%02d | %-25s\n",m, http_response_status_phrases[i]);
+
+    }
+
     // Initialized data
-    char _http_response[1<<16] = { 0 };
+    //char _http_response[1<<16] = { 0 };
     /*
     // Requests
     {
@@ -156,7 +193,7 @@ size_t load_file ( const char *path, void *buffer, bool binary_mode )
         {
             no_path:
                 #ifndef NDEBUG
-                    printf("[HTTP] Null path provided to function \"%s\n", __FUNCTION__);
+                    printf("[http] Null path provided to function \"%s\n", __FUNCTION__);
                 #endif
 
                 // Error
